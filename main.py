@@ -27,20 +27,17 @@ def start_game():
         if isinstance(game.players[game.current_player], HumanPlayer):
             row, col = get_human_move(game.players[game.current_player].symbol)
             try:
-                game.players[game.current_player].make_move(game.board, row, col)
+                game.players[game.current_player].make_move(game, row, col)
             except ValueError:
                 print("Invalid move. Try again.")
                 continue
         else:
-            row, col = game.players[game.current_player].make_move(game.board)
+            row, col = game.players[game.current_player].make_move(game)
         game.board[row][col] = game.players[game.current_player].symbol
 
         winner = game.get_winner()
         if winner or all(all(cell is not None for cell in row) for row in game.board):
             break
-
-        game.current_player = 1 - game.current_player
-
     game.print_board()
     if winner:
         print(f'Player {winner} wins!')

@@ -26,9 +26,36 @@ class TestTicTacToeGame(unittest.TestCase):
     def test_winner_detection(self):
         game = TicTacToeGame(HumanPlayer('X'), BotPlayer('O'))
         # Create a winning condition
-        game.board[0] = ['X', 'X', 'X']
-        winner = game.get_winner()
-        self.assertEqual(winner, 'X')
+        x_winning_cases = [
+            [['X', 'X', 'X'], [None, 'O', None], [None, 'O', None]],
+            [[None, 'O', None], ['X', 'X', 'X'], [None, 'O', None]],
+            [[None, 'O', None], [None, 'O', None], ['X', 'X', 'X']],
+            [['X', None, None], ['X', 'O', None], ['X', None, 'O']],
+            [[None, 'X', 'O'], [None, 'X', 'O'], [None, 'X', None]],
+            [[None, None, 'X'], [None, 'O', 'X'], [None, None, 'X']],
+            [['X', 'O', None], [None, 'X', 'O'], [None, None, 'X']],
+            [[None, 'O', 'X'], [None, 'X', 'O'], ['X', None, None]]
+        ]
+        for case in x_winning_cases:
+            game.board = case
+            winner = game.get_winner()
+            # Check that the winner is 'X'
+            self.assertEqual(winner, 'X')
+        o_winning_cases = [
+            [['O', 'O', 'O'], [None, 'X', None], [None, 'X', None]],
+            [[None, 'X', None], ['O', 'O', 'O'], [None, 'X', None]],
+            [[None, 'X', None], [None, 'X', None], ['O', 'O', 'O']],
+            [['O', None, None], ['O', 'X', None], ['O', None, 'X']],
+            [[None, 'O', 'X'], [None, 'O', 'X'], [None, 'O', None]],
+            [[None, None, 'O'], [None, 'X', 'O'], [None, None, 'O']],
+            [['O', 'X', None], [None, 'O', 'X'], [None, None, 'O']],
+            [[None, 'X', 'O'], [None, 'O', 'X'], ['O', None, None]]
+        ]
+        for case in o_winning_cases:
+            game.board = case
+            winner = game.get_winner()
+            # Check that the winner is 'O'
+            self.assertEqual(winner, 'O')
 
     def test_draw_detection(self):
         game = TicTacToeGame(HumanPlayer('X'), BotPlayer('O'))
@@ -42,7 +69,7 @@ class TestTicTacToeGame(unittest.TestCase):
         game = TicTacToeGame(HumanPlayer('X'), HumanPlayer('O'))
         game.board[0][0] = 'X'
         with self.assertRaises(ValueError):
-         game.players[1].make_move(game.board, 0, 0)
+         game.players[1].make_move(game, 0, 0)
 
 if __name__ == '__main__':
     unittest.main()
