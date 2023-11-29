@@ -1,3 +1,7 @@
+import csv
+import os
+from datetime import datetime
+
 class TicTacToeGame:
     def __init__(self, player1, player2):
         self.board = [[None for _ in range(3)] for _ in range(3)]
@@ -51,3 +55,27 @@ class TicTacToeGame:
 
         print(f'Player {winner} wins!')
         self.print_board()
+
+    def log_game_result(self):
+        winner = self.get_winner()
+        result = 'Draw' if winner is None else f'Player {winner}'
+        log_data = {
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'player1_symbol': self.players[0].symbol,
+            'player2_symbol': self.players[1].symbol,
+            'winner': result
+        }
+        self.write_log(log_data)
+
+    @staticmethod
+    def write_log(data):
+        log_file = 'logs/game_log.csv'
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)
+        
+        file_exists = os.path.isfile(log_file)
+
+        with open(log_file, 'a', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=data.keys())
+            if not file_exists:
+                writer.writeheader()
+            writer.writerow(data)
