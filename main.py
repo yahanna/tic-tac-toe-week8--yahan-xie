@@ -63,12 +63,10 @@ def start_game():
         inital_time = duration + inital_time
         game_data.append(data)
         # pprint(game_data)
-        
         winner = game.get_winner() 
         # data['winner'] = winner
         if winner or all(all(cell is not None for cell in row) for row in game.board):
             break
-
         game.current_player = 1 - game.current_player
 
     game.print_board()

@@ -7,6 +7,8 @@ class TicTacToeGame:
         self.board = [[None for _ in range(3)] for _ in range(3)]
         self.players = [player1, player2]
         self.current_player = 0
+        self.first_player = player1.symbol  # 记录首先移动的玩家
+        self.first_moves = {player1.symbol: None, player2.symbol: None}  # 新增，用于记录每位玩家的首步
 
     def print_board(self):
         for row in self.board:
@@ -38,6 +40,9 @@ class TicTacToeGame:
 
     def play_game(self):
         winner = None
+        if self.first_moves[self.players[self.current_player].symbol] is None:
+            self.first_moves[self.players[self.current_player].symbol] = (row, col)
+
 
         while winner is None:
             self.print_board()
@@ -50,7 +55,6 @@ class TicTacToeGame:
                 print("It's a draw!")
                 self.print_board()
                 return
-
             self.current_player = 1 - self.current_player
 
         print(f'Player {winner} wins!')
@@ -59,18 +63,22 @@ class TicTacToeGame:
     def log_game_result(self):
         winner = self.get_winner()
         result = 'Draw' if winner is None else f'Player {winner}'
+        winning_first_move = self.first_moves[winner] if winner else None
         log_data = {
             'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'player1_symbol': self.players[0].symbol,
             'player2_symbol': self.players[1].symbol,
-            'winner': result
+            'first_player': self.first_player,
+            'winner': result,
+            'winning_first_move': winning_first_move  # 新增
         }
         self.write_log(log_data)
 
     @staticmethod
     def write_log(data):
-        log_file = 'logs/game_log.csv'
-        os.makedirs(os.path.dirname(log_file), exist_ok=True)
+        log_file = 'game_log1.csv'
+        if len(os.path.dirname(log_file)):
+            os.makedirs(os.path.dirname(log_file), exist_ok=True)
         
         file_exists = os.path.isfile(log_file)
 
